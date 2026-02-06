@@ -1,5 +1,6 @@
+import asyncio
 import logging
-from aiogram import Bot, Dispatcher, executor, types
+from aiogram import Bot, Dispatcher, types
 from aiogram.types import ReplyKeyboardMarkup
 
 # ===== Настройки =====
@@ -7,8 +8,6 @@ API_TOKEN = "8216116135:AAEsqunknYT3cSl2EM_EvTYBbhjZJOWfhOw"
 ADMIN_ID = 7625893405 # твой Telegram ID
 
 logging.basicConfig(level=logging.INFO)
-bot = Bot(token=API_TOKEN)
-dp = Dispatcher(bot)
 
 # ===== Логины =====
 USER_LOGIN = "pronto"
@@ -33,15 +32,13 @@ kb.add("📋 Pending Deposits", "📬 User Requests")
 return kb
 
 # ===== START =====
-@dp.message_handler(commands=["start"])
-async def start(message: types.Message):
+async def start_handler(message: types.Message):
 uid = message.from_user.id
 auth_stage[uid] = "login"
 await message.answer("🔐 Enter login:")
 
 # ===== AUTH =====
-@dp.message_handler()
-async def auth(message: types.Message):
+async def auth_handler(message: types.Message):
 uid = message.from_user.id
 text = message.text
 stage = auth_stage.get(uid, None)
@@ -71,5 +68,16 @@ else:
 await message.answer("❌ Wrong admin password")
 
 # ===== RUN =====
+async def main():
+bot = Bot(token=API_TOKEN)
+dp = Dispatcher()
+
+# Регистрация хэндлеров
+dp.message.register(start_handler, commands=["start"])
+dp.message.register(auth_handler)
+
+logging.info("Bot started")
+await dp.start_polling(bot)
+
 if __name__ == "__main__":
-executor.start_polling(dp, skip_updates=True)
+asyncio.run(main())
