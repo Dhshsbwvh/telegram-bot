@@ -6,11 +6,11 @@ from aiogram.types import ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeybo
 
 
 
-# ====================== ВСТАВЛЕННЫЙ ТОКЕН ======================
+# ====================== ТОКЕН БОТА ======================
 
 API_TOKEN = "8216116135:AAEsqunknYT3cSl2EM_EvTYBbhjZJOWfhOw"
 
-# ================================================================
+# ========================================================
 
 
 
@@ -38,7 +38,7 @@ ADMIN_PASSWORD = "7vZ#9qLp!2T"
 
 
 
-ADMIN_ID = 7625893405  # 
+ADMIN_ID = 7625893405  # твой Telegram ID
 
 
 
@@ -132,6 +132,8 @@ async def auth(message: types.Message):
 
 
 
+    # Ввод логина
+
     if stage == "login":
 
         if text == USER_LOGIN:
@@ -148,9 +150,11 @@ async def auth(message: types.Message):
 
         else:
 
-            await message.answer("❌ Wrong login")
+            await message.answer("❌ Wrong login. Try again.")
 
 
+
+    # Ввод пароля пользователя
 
     elif stage == "password_user":
 
@@ -160,13 +164,15 @@ async def auth(message: types.Message):
 
             auth_stage.pop(uid)
 
-            await message.answer("✅ Logged in", reply_markup=main_kb())
+            await message.answer("✅ Logged in as user", reply_markup=main_kb())
 
         else:
 
-            await message.answer("❌ Wrong password")
+            await message.answer("❌ Wrong password. Try again.")
 
 
+
+    # Ввод пароля админа
 
     elif stage == "password_admin":
 
@@ -178,7 +184,7 @@ async def auth(message: types.Message):
 
         else:
 
-            await message.answer("❌ Access denied")
+            await message.answer("❌ Wrong admin password.")
 
 
 
@@ -306,7 +312,7 @@ async def deposit_withdraw_request(message: types.Message):
 
 
 
-# ===== ADMIN =====
+# ===== ADMIN BUTTONS =====
 
 @dp.message_handler(text="📋 Pending Deposits")
 
